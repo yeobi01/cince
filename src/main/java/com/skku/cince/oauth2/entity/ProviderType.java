@@ -1,4 +1,4 @@
-package com.skku.cince.oauth.entity;
+package com.skku.cince.oauth2.entity;
 
 import lombok.Getter;
 
