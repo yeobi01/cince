@@ -1,8 +1,12 @@
 package com.skku.cince.infrastructure.config;
 
-import com.skku.cince.oauth.handler.OAuth2AuthenticationFailureHandler;
-import com.skku.cince.oauth.handler.OAuth2AuthenticationSuccessHandler;
-import com.skku.cince.oauth.service.CustomOAuth2UserService;
+import com.skku.cince.infrastructure.security.JwtTokenProvider;
+import com.skku.cince.oauth2.filter.JwtAuthenticationFilter;
+import com.skku.cince.oauth2.handler.JwtAccessDeniedHandler;
+import com.skku.cince.oauth2.handler.JwtAuthenticationEntryPoint;
+import com.skku.cince.oauth2.handler.OAuth2AuthenticationFailureHandler;
+import com.skku.cince.oauth2.handler.OAuth2AuthenticationSuccessHandler;
+import com.skku.cince.oauth2.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +29,9 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -63,7 +70,7 @@ public class SecurityConfig {
                         .failureHandler(oAuth2AuthenticationFailureHandler)) // 실패 handler
 
                 // JWT 필터 추가 ( 모든 요청에 대해 토큰 검사를 먼저 수행)
-                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
