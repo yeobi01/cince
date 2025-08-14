@@ -1,4 +1,4 @@
-package com.skku.cince.oauth.info;
+package com.skku.cince.oauth2.info;
 
 import java.util.Map;
 

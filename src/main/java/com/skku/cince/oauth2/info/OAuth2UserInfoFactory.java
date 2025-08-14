@@ -1,6 +1,6 @@
-package com.skku.cince.oauth.info;
+package com.skku.cince.oauth2.info;
 
-import com.skku.cince.oauth.entity.ProviderType;
+import com.skku.cince.oauth2.entity.ProviderType;
 
 import java.util.Map;
 
