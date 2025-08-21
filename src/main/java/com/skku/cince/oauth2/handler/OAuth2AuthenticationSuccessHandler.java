@@ -50,13 +50,21 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         redisTemplate.opsForValue().set(email, refreshToken, refreshTokenValidityInMilliseconds, TimeUnit.MILLISECONDS);
         log.info("Permanent Refresh Token stored in Redis for {}. TTL: {}s", email, refreshTokenValidityInMilliseconds / 1000);
 
-        String targetUrl = createRedirectUrl();
+        String targetUrl = createRedirectUrl(authentication);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
-    private String createRedirectUrl() {
+    private String createRedirectUrl(Authentication authentication) {
+        boolean isGuest = authentication.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_GUEST"));
+
         // 프론트엔드에서 로그인 성공 후 이동할 페이지
-        return UriComponentsBuilder.fromUriString("http://localhost:8080/oauth/redirected")
-                .build().toUriString();
+        if(isGuest){
+            return UriComponentsBuilder.fromUriString("http://localhost:8080/oauth/redirected")
+                    .build().toUriString();
+        } else {
+            return UriComponentsBuilder.fromUriString("http://localhost:8080")
+                    .build().toUriString();
+        }
     }
 }
