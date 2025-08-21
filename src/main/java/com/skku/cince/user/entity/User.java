@@ -26,6 +26,9 @@ public class User {
     @Column(nullable = false)
     private UserRole role;
 
+    @Column
+    private String phoneNumber;
+
     @Builder
     public User(String name, String email, String picture, UserRole role) {
         this.name = name;
@@ -44,4 +47,11 @@ public class User {
         return this.role.getCode();
     }
 
+    public void updatePhoneNumber(String phoneNumber){
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void updateRole(UserRole role){
+        this.role = role;
+    }
 }
