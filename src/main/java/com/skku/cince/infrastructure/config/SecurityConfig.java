@@ -46,11 +46,14 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 // HTTP 요청에 대한 접근 권한 설정
-                .authorizeHttpRequests(authz -> authz
+                .authorizeHttpRequests(auth -> auth
                         // 인증 없이도 접근을 허용할 API 명시
                         .requestMatchers("/api/v1/auth/refresh", "/api/v1/auth/token", "/api/v1/auth/logout").permitAll() // auth 관련
                         .requestMatchers("/", "/login/**", "/oauth2/**").permitAll() // 소셜 로그인 관련
-                        .requestMatchers("/api/v1/user/for-user").hasAuthority("ROLE_USER")
+                        .requestMatchers("/api/access-test/**").hasAuthority("ROLE_USER")
+//                        hasAnyRole, hasAnyAuthority 로 하면 여러개 설정 가능
+//                        Role로 하면 ROLE_USER를 USER로 작성 가능.
+//                        .requestMatchers("/api/v1/user/for-user").hasAuthority("ROLE_USER")
 
                         // accessDeniedHandler에서 sendError의 경우 내부적인 `/error` 경로로 요청 처리
                         // `/error` 의 경우에도 인증 확인 절차가 이루어져 403 떠야하는 상황에 401 뜨는 것 방지하기 위해
